@@ -94,7 +94,7 @@ class Task  extends Model
     }
 
     /**
-     * La méthode permet de récupérer les tâches d'un utilisateur
+     * La méthode permet de récupérer une tâche suivant un ID task
      *
      * @param int $id
      * @return self|false
@@ -102,6 +102,34 @@ class Task  extends Model
     public function getOneById(int $id): self|false
     {
         $stmt = $this->pdo->prepare("SELECT * FROM task WHERE id = :id ");
+        $stmt->bindParam(':id', $id);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+    /**
+     * La méthode permet de récupérer les tâches d'un utilisateur
+     *
+     * @param int $id_user
+     * @return self|false
+     */
+    public function getOneByIdUser(int $id_user): self|false
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM task WHERE id_user = :id_user ");
+        $stmt->bindParam(':id', $id_user);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
+    /**
+     * La méthode permet de supprimer une tâche suivant un ID task
+     *
+     * @param int $id
+     * @return self|false
+     */
+    public function deleteOneById(int $id): self|false
+    {
+        $stmt = $this->pdo->prepare("DELETE FROM task WHERE id=:id");
         $stmt->bindParam(':id', $id);
         $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
         $stmt->execute();
