@@ -13,10 +13,10 @@ class Database
     public static function getPdo(): PDO
     {
 
-        if (self::$instance == null){
+        if (self::$instance == null) {
             try {
                 self::$instance = new PDO(
-                    "mysql:host=localhost;dbname=todo",
+                    "mysql:host=localhost;dbname=to_do_list_db",
                     "root",
                     "",
                     [
@@ -24,7 +24,7 @@ class Database
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
                     ]
                 );
-            }catch (PDOException $exception){
+            } catch (PDOException $exception) {
                 echo $exception->getMessage();
                 die;
             }
@@ -32,5 +32,4 @@ class Database
 
         return  self::$instance;
     }
-
 }
