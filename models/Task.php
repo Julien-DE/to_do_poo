@@ -135,4 +135,18 @@ class Task  extends Model
         $stmt->execute();
         return $stmt->fetch();
     }
+    /**
+     * La méthode permet de mettre à jour une tâche comme faite suivant un ID task
+     *
+     * @param int $id
+     * @return self|false
+     */
+    public function taskIsDone(int $id): self|false
+    {
+        $stmt = $this->pdo->prepare("UPDATE TASK SET is_done = 1 WHERE id=:id");
+        $stmt->bindParam(':id', $id);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
 }
