@@ -159,13 +159,33 @@ class Task  extends Model
     public function addTask(
         $name,
         $id_user,
-    ) {
+    ): self|false {
         $stmt = $this->pdo->prepare("INSERT INTO `task` (`name`, `id_user`) VALUES (:name, :id)");
         $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
         $stmt->execute([
             'name' => $name,
             'id' => $id_user,
         ]);
+        return $stmt->fetch();
+    }
+    /**
+     * La méthode de modifier une tache
+     *
+     * 
+     * @param int $id
+     * @param string $new_name
+     * @return self|false
+     */
+    public function editTask(
+        $id,
+        $new_name
+    ): self|false {
+        $stmt = $this->pdo->prepare("UPDATE task SET `name` = :new_name WHERE id = :id");
+        $stmt->execute([
+            'new_name' => $new_name,
+            'id' => $id,
+        ]);
+        $stmt->execute();
         return $stmt->fetch();
     }
 }
