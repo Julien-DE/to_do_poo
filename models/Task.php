@@ -19,7 +19,7 @@ class Task  extends Model
      *
      * @return int
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -93,7 +93,18 @@ class Task  extends Model
         $this->id_user = $id_user;
     }
 
-
-
+    /**
+     * La méthode permet de récupérer les tâches d'un utilisateur
+     *
+     * @param string $id
+     * @return self|false
+     */
+    public function getOneById(string $id): self|false
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM user WHERE id = :id ");
+        $stmt->bindParam(':id', $id);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
+        $stmt->execute();
+        return $stmt->fetch();
+    }
 }
-
