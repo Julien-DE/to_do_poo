@@ -8,7 +8,7 @@ abstract class Model
 
     public function __construct()
     {
-        echo "je suis la classe mère model";
+
         $this->pdo = Database::getPdo();
     }
 }
