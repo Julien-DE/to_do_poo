@@ -149,4 +149,23 @@ class Task  extends Model
         $stmt->execute();
         return $stmt->fetch();
     }
+    /**
+     * La méthode d'ajouterr une tâche
+     *
+     * @param int $id_user
+     * @param string $name
+     * @return self|false
+     */
+    public function addTask(
+        $name,
+        $id_user,
+    ) {
+        $stmt = $this->pdo->prepare("INSERT INTO `task` (`name`, `id_user`) VALUES (:name, :id)");
+        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
+        $stmt->execute([
+            'name' => $name,
+            'id' => $id_user,
+        ]);
+        return $stmt->fetch();
+    }
 }
