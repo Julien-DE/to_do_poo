@@ -16,7 +16,7 @@ class Database
         if (self::$instance == null) {
             try {
                 self::$instance = new PDO(
-                    "mysql:host=localhost;dbname=to_do_list_db",
+                    "mysql:host=localhost;dbname=todo",
                     "root",
                     "",
                     [
