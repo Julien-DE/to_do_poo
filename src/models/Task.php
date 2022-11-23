@@ -7,8 +7,9 @@ class Task  extends Model
     private int $id;
     private string $name;
     private string $to_do_at; // TODO change type
-    private bool $is_done;
+    private bool $is_done = false;
     private int $id_user;
+    protected string $table_name = "task";
 
 
 
@@ -94,97 +95,20 @@ class Task  extends Model
     }
 
     /**
-     * La méthode permet de récupérer une tâche suivant un ID task
-     *
-     * @param int $id
-     * @return self|false
+     * Insérer une tache dans la BDD
+     * @return int|false l'id du dernier élément inséré ou false dans le cas d'échec
      */
-    public function getOneById(int $id): self|false
+    public function insert(): int|false
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM task WHERE id = :id ");
-        $stmt->bindParam(':id', $id);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
-    /**
-     * La méthode permet de récupérer les tâches d'un utilisateur
-     *
-     * @param int $id_user
-     * @return self|false
-     */
-    public function getOneByIdUser(int $id_user): self|false
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM task WHERE id_user = :id_user ");
-        $stmt->bindParam(':id', $id_user);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
-    /**
-     * La méthode permet de supprimer une tâche suivant un ID task
-     *
-     * @param int $id
-     * @return self|false
-     */
-    public function deleteOneById(int $id): self|false
-    {
-        $stmt = $this->pdo->prepare("DELETE FROM task WHERE id=:id");
-        $stmt->bindParam(':id', $id);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
-    /**
-     * La méthode permet de mettre à jour une tâche comme faite suivant un ID task
-     *
-     * @param int $id
-     * @return self|false
-     */
-    public function taskIsDone(int $id): self|false
-    {
-        $stmt = $this->pdo->prepare("UPDATE TASK SET is_done = 1 WHERE id=:id");
-        $stmt->bindParam(':id', $id);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
-    /**
-     * La méthode d'ajouter une tâche
-     *
-     * @param int $id_user
-     * @param string $name
-     */
-    public function addTask(
-        $name,
-        $id_user,
-    ) {
-        $stmt = $this->pdo->prepare("INSERT INTO `task` (`name`, `id_user`) VALUES (:name, :id)");
-        $stmt->setFetchMode(PDO::FETCH_CLASS, __CLASS__);
+        $stmt = $this->pdo->prepare("INSERT INTO task (`name`, `to_do_at`, `is_done`,`id_user`) VALUES (:name, :to_do_at, :is_done, :id_user)");
+
         $stmt->execute([
-            'name' => $name,
-            'id' => $id_user,
+            'name' => $this->name,
+            'to_do_at' => $this->to_do_at,
+            'is_done' => $this->is_done,
+            'id_user' => $this->id_user,
         ]);
-        return $stmt->fetch();
-    }
-    /**
-     * La méthode de modifier une tache
-     *
-     * 
-     * @param int $id
-     * @param string $new_name
-     * @return self|false
-     */
-    public function editTask(
-        $id,
-        $new_name
-    ): self|false {
-        $stmt = $this->pdo->prepare("UPDATE task SET `name` = :new_name WHERE id = :id");
-        $stmt->execute([
-            'new_name' => $new_name,
-            'id' => $id,
-        ]);
-        $stmt->execute();
-        return $stmt->fetch();
+
+        return $this->pdo->lastInsertId();
     }
 }
